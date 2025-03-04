@@ -67,7 +67,7 @@ def main():
         site_name=["indeed", "linkedin", "zip_recruiter", "glassdoor", "google", "bayt"],
         search_term='("backend" OR "software engineer" OR "fullstack" OR "software" OR "engineer")',
         location="USA",              # Use "USA" to filter for US-based job postings where applicable
-        results_wanted=500,           # Number of jobs to retrieve from each site
+        results_wanted=100,           # Number of jobs to retrieve from each site
         hours_old=168,                # Only jobs posted in the last 72 hours
         is_remote=True,              # Filter for remote positions
         country_indeed='USA'         # Ensures Indeed & Glassdoor return US jobs
@@ -113,9 +113,8 @@ def main():
     print(f"Found {len(jobs_sorted)} jobs.")
     print(jobs_sorted.head())
 
-    # Drop the DESCRIPTION column before writing to file
-    if 'description' in jobs_sorted.columns:
-        jobs_sorted = jobs_sorted.drop(columns=['description'])
+    # Drop columns before writing to file
+    jobs_sorted = jobs_sorted.drop(columns=['description','job_url_direct',"company_logo","company_url_direct","company_addresses","company_num_employees","company_revenue","company_description"])
 
     # Create a unique filename using the current date and time as a prefix
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
