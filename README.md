@@ -59,7 +59,7 @@ pip install -U python-jobspy pandas
      - `TITLE_EXCLUSION_REGEX`: Regex pattern for keywords to exclude from job titles.
    - **Scoring Bonuses:**  
      - `KEYWORD_SCORE_MAP`: Map of description keywords to bonus scores.
-     - `BENEFITS_BONUS` and `REMOTE_BONUS`: Additional bonus values.
+     - `REMOTE_BONUS`: Additional bonus value for jobs marked as remote.
    - **Output Cleanup:**  
      - `DROP_COLUMNS`: List of DataFrame columns to drop before saving the CSV.
 
@@ -67,7 +67,7 @@ pip install -U python-jobspy pandas
    Execute the script from your terminal:
 
 ```bash
-python main.py
+python job_scraping.py
 ```
 
 3. **Review the Output:**  
