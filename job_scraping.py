@@ -81,14 +81,18 @@ def main():
         country_indeed=config.COUNTRY_INDEED
     )
 
+    print(f"Found {len(jobs)} jobs before filtering.")
+
     if jobs.empty:
         print("No jobs found matching the criteria.")
         return
     
     # Filter in only jobs whose title matches inclusion keywords
     jobs = jobs[jobs["title"].str.contains(config.TITLE_INCLUSION_REGEX, case=False, na=False)]
+    print(f"Jobs after title inclusion filter: {len(jobs)}.")
     # Filter out job titles with irrelevant keywords (like "principal" or "intern")
     jobs = jobs[~jobs["title"].str.contains(config.TITLE_EXCLUSION_REGEX, case=False, na=False)]
+    print(f"Jobs after title exclusion filter: {len(jobs)}.")
     
     if jobs.empty:
         print("No software engineering jobs found after filtering by title.")
@@ -97,6 +101,7 @@ def main():
     # Filter out roles where 'is_remote' is populated and equals False.
     if config.IS_REMOTE and 'is_remote' in jobs.columns:
         jobs = jobs[jobs["is_remote"].isnull() | (jobs["is_remote"] == True)]
+        print(f"Jobs after is_remote filter: {len(jobs)}.")
         if jobs.empty:
             print("No remote jobs found after filtering by is_remote flag.")
             return
@@ -104,6 +109,7 @@ def main():
     # Filter out rows that do not have a valid US location.
     if 'location' in jobs.columns:
         jobs = jobs[jobs["location"].apply(is_us_location)]
+        print(f"Jobs after location filter: {len(jobs)}.")
         if jobs.empty:
             print("No jobs found with a valid US location after filtering by location.")
             return
@@ -111,6 +117,7 @@ def main():
     # Filter out jobs that are not fulltime. Only keep jobs with a job_type of "fulltime" (or null).
     if 'job_type' in jobs.columns:
         jobs = jobs[(jobs['job_type'].isnull()) | (jobs['job_type'].str.lower().isin(['fulltime', 'full-time']))]
+        print(f"Jobs after job_type filter: {len(jobs)}.")
         if jobs.empty:
             print("No fulltime jobs found after filtering by job_type.")
             return
@@ -118,6 +125,7 @@ def main():
     # Filter out jobs that are hourly. Only keep jobs with an interval other than "hourly" (or null).
     if 'interval' in jobs.columns:
         jobs = jobs[(jobs['interval'].isnull()) | (jobs['interval'].str.lower() != 'hourly')]
+        print(f"Jobs after interval filter: {len(jobs)}.")
         if jobs.empty:
             print("No salary jobs found after filtering out hourly positions.")
             return
@@ -135,7 +143,7 @@ def main():
     else:
         jobs_sorted = jobs.sort_values(by='composite_score', ascending=False)
 
-    print(f"Found {len(jobs_sorted)} jobs.")
+    print(f"Found {len(jobs_sorted)} jobs after filtering.")
 
     # Drop unnecessary columns before writing to file.
     jobs_sorted = jobs_sorted.drop(columns=config.DROP_COLUMNS, errors='ignore')

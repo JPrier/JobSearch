@@ -88,7 +88,6 @@ python job_scraping.py
 3. **Composite Scoring:**  
    For each job, a composite score is calculated by:
    - Averaging available salary data.
-   - Adding a benefits bonus if the description includes "benefits".
    - Scanning the job description for keywords defined in `KEYWORD_SCORE_MAP` and adding the corresponding bonus.
    - Adding a remote bonus if the job is remote.
 
